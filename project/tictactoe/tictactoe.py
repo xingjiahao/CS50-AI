@@ -25,7 +25,9 @@ def player(board):
     """
     num=0
     for row in board:
-        num+=row.count(EMPTY)
+        for col in row:
+            if col==EMPTY:
+                num+=1
     if num%2:
         return X
     else:
@@ -65,9 +67,9 @@ def winner(board):
             return board[0][i]
         if board[i][0]!=EMPTY and (board[i][0]==board[i][1]==board[i][2]):
             return board[i][0]
-    if board[0][0]!=EMPTY and board[0][0]==board[1][1]==board[2][2]:
+    if board[0][0]!=EMPTY and (board[0][0]==board[1][1]==board[2][2]):
         return board[0][0]
-    if board[0][2]!=EMPTY and board[0][2]==board[1][1]==board[2][0]:
+    if board[0][2]!=EMPTY and (board[0][2]==board[1][1]==board[2][0]):
         return board[0][2]
     return None
 
@@ -101,13 +103,14 @@ def utility(board):
 def scord(board):
     if terminal(board):
         return utility(board)
-    res=[]
     if player(board)==X:
+        res=[]
         for act in actions(board):
             sc=scord(result(board,act))
             res.append(sc)
         return max(res)
     else:
+        res=[]
         for act in actions(board):
             sc=scord(result(board,act))
             res.append(sc)
@@ -128,9 +131,9 @@ def minimax(board):
             sc=scord(new_board)
             res.append((sc,act))
         max_res=res[0]
-        for sc,act in enumerate(res):
-            if sc>max_res[0]:
-                max_res=(sc,act)
+        for x in res:
+            if x[0]>max_res[0]:
+                max_res=x
         return max_res[1]
     else:
         res=[]
@@ -139,8 +142,7 @@ def minimax(board):
             sc=scord(new_board)
             res.append((sc,act))
         min_res=res[0]
-        for sc,act in enumerate(res):
-            if sc<min_res[0]:
-                min_res=(sc,act)
+        for x in res:
+            if x[0]<min_res[0]:
+                min_res=x
         return min_res[1]
-
